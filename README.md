@@ -122,11 +122,11 @@ The database will be automatically prefilled on your first server boot. Use thes
 
 ---
 
-## 🌐 Standalone Cloud Hosting Steps (Railway + Vercel)
+## 🌐 Standalone Cloud Hosting Steps (Render + Vercel)
 
 By separating the client and server, we can deploy them independently to specialized hosting services for maximum performance and stability:
 
-### 🖥️ A. Standalone Backend (Railway)
+### 🖥️ A. Standalone Backend (Render)
 1. Initialize a new git repository, commit all files, and push to GitHub:
    ```bash
    git init
@@ -134,16 +134,16 @@ By separating the client and server, we can deploy them independently to special
    git commit -m "deploy: finalize isolated backend and frontend structure"
    # Push to your GitHub repo
    ```
-2. Log into [Railway.app](https://railway.app/).
-3. Click **New Project** and select **Deploy from GitHub repo**. Select your `team-task-manager` repository.
-4. In your Railway service dashboard, go to **Settings** -> **General** -> **Root Directory** and set it to **`server`**.
-   - *This ensures Railway only builds the server subdirectory and uses the optimized standalone `/server/Dockerfile`!*
-5. Go to the **Variables** tab and add:
+2. Log into [Render](https://render.com/).
+3. Click **New** and create a **Web Service** from your GitHub repository.
+4. Set the **Root Directory** to **`server`** so Render builds the backend folder only.
+5. Set the **Build Command** to `npm install` and the **Start Command** to `npm start`.
+6. Go to the **Environment** tab and add:
    - `MONGODB_URI`: (Your Atlas MongoDB connection string)
    - `JWT_SECRET`: `your_secure_random_string`
    - `JWT_EXPIRE`: `30d`
    - `NODE_ENV`: `production`
-6. Click **Deploy**! Once completed, your backend will be live (e.g. `https://your-backend.up.railway.app/api/health`).
+7. Click **Deploy**! Once completed, your backend will be live (for example, `https://your-backend.onrender.com/api/health`).
 
 ### 🎨 B. Standalone Frontend (Vercel)
 1. Log into [Vercel](https://vercel.com/).
@@ -151,5 +151,10 @@ By separating the client and server, we can deploy them independently to special
 3. In the project configure page, set the **Root Directory** to **`client`**.
 4. Add the following **Environment Variable**:
    - **Name:** `VITE_API_BASE_URL`
-   - **Value:** `https://your-backend.up.railway.app/api` (Point this to your Railway URL with `/api` appended).
+   - **Value:** `https://teamtaskmanager-8l7y.onrender.com/api` (Point this to your Render backend URL with `/api` appended).
 5. Click **Deploy**! Vercel will compile the React bundle and host it on a global CDN.
+
+### 🔗 How The Two Apps Connect
+- The frontend calls the backend through `VITE_API_BASE_URL`.
+- In production, set that variable to your Render API base URL, for example `https://teamtaskmanager-8l7y.onrender.com/api`.
+- The backend already allows cross-origin requests with `cors()`, so the Vercel frontend can call the Render API directly.
