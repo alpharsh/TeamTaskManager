@@ -39,6 +39,19 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ success: true, message: 'API is running successfully' });
 });
 
+// Public root endpoint for Railway/browser checks
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'TeamTaskManager API is running',
+    health: '/api/health'
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ success: true, message: 'OK' });
+});
+
 // Serve frontend static assets in production
 const clientBuildPath = path.join(__dirname, '../client/dist');
 if (fs.existsSync(clientBuildPath)) {
@@ -72,6 +85,6 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server listening in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });
