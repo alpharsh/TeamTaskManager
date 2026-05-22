@@ -14,7 +14,7 @@ RUN npm ci --omit=dev
 COPY . .
 
 # Expose the API port
-EXPOSE 8080
+EXPOSE 5000
 
 # Start the Express server
 CMD ["node", "server.js"]
